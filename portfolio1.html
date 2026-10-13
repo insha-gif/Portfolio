@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insha Ullah | Data Analyst Portfolio</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome 6.5.1 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Chart.js for Live Analytics Sandbox -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            cyanAccent: '#38bdf8',
+            emeraldAccent: '#10b981',
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom styling & glassmorphism */
+    .glass {
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(99, 102, 241, 0.18);
+    }
+    .light .glass {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+    }
+
+    .glass-card {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 20px 35px -10px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Ambient animated data background grid */
+    .data-grid-bg {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+    }
+
+    /* 3D Perspective Stage for Anime Card */
+    .avatar-perspective-stage {
+      perspective: 1200px;
+    }
+    .avatar-3d-card {
+      transform-style: preserve-3d;
+      transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: transform;
+    }
+
+    /* Eye pupil transitions & blinks */
+    .pupil {
+      transition: transform 0.08s ease-out;
+      will-change: transform;
+    }
+    .eye-lid {
+      transition: transform 0.12s ease-in-out;
+      transform-origin: center;
+    }
+    .blinking .eye-lid {
+      transform: scaleY(0.05);
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090d16;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+
+<body class="bg-[#090d16] text-slate-100 font-sans antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
+  <div class="data-grid-bg fixed inset-0 pointer-events-none z-0"></div>
+
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 bg-slate-900/95 text-white px-5 py-3.5 rounded-xl shadow-2xl border border-brand-500/30 backdrop-blur-md">
+    <i class="fa-solid fa-circle-check text-cyanAccent text-lg" id="toastIcon"></i>
+    <span id="toastMsg" class="text-sm font-medium">Notification</span>
+  </div>
+
+  <header class="fixed top-0 left-0 w-full z-40 backdrop-blur-md bg-[#090d16]/85 border-b border-slate-800/80 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-cyanAccent flex items-center justify-center text-white font-bold font-mono text-base shadow-lg shadow-brand-500/25 group-hover:scale-105 transition-transform">
+          IU
+        </div>
+        <div>
+          <span class="font-bold text-sm sm:text-base tracking-tight text-white flex items-center gap-2">
+            Insha Ullah
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          </span>
+          <span class="text-[11px] text-slate-400 block font-mono">Data Analyst Intern</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Items -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+        <a href="#about" class="hover:text-cyanAccent transition-colors">About</a>
+        <a href="#skills" class="hover:text-cyanAccent transition-colors">Skills</a>
+        <a href="#projects" class="hover:text-cyanAccent transition-colors">Projects</a>
+        <a href="#analytics-demo" class="hover:text-cyanAccent transition-colors flex items-center gap-1.5 text-cyanAccent">
+          <i class="fa-solid fa-chart-line text-xs"></i> Live Lab
+        </a>
+        <a href="#education" class="hover:text-cyanAccent transition-colors">Education</a>
+        <a href="#certifications" class="hover:text-cyanAccent transition-colors">Certifications</a>
+      </nav>
+
+      <!-- Right CTAs -->
+      <div class="flex items-center gap-3">
+        <button onclick="openResumeModal()" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-slate-700 hover:border-slate-500 text-xs font-mono text-slate-300 hover:text-white transition-colors">
+          <i class="fa-solid fa-file-pdf text-brand-400"></i> Resume
+        </button>
+
+        <a href="#contact" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-md shadow-brand-600/30 transition-all hover:scale-105">
+          <i class="fa-solid fa-envelope"></i> Contact
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobileMenuBtn" aria-label="Open Navigation Menu" class="md:hidden p-2 rounded-xl border border-slate-800 text-slate-300 hover:bg-slate-800">
+          <i class="fa-solid fa-bars text-sm"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden px-6 pt-3 pb-6 border-b border-slate-800 bg-[#090d16]/95 backdrop-blur-xl">
+      <div class="flex flex-col gap-3 text-sm font-medium text-slate-200">
+        <a href="#about" class="py-2 border-b border-slate-800/60 mobile-link">About</a>
+        <a href="#skills" class="py-2 border-b border-slate-800/60 mobile-link">Skills</a>
+        <a href="#projects" class="py-2 border-b border-slate-800/60 mobile-link">Projects</a>
+        <a href="#analytics-demo" class="py-2 border-b border-slate-800/60 mobile-link text-cyanAccent">Live Analytics Lab</a>
+        <a href="#education" class="py-2 border-b border-slate-800/60 mobile-link">Education</a>
+        <a href="#certifications" class="py-2 border-b border-slate-800/60 mobile-link">Certifications</a>
+        <a href="#contact" class="py-2 text-brand-400 font-semibold mobile-link">Get In Touch</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-20">
+    <section id="hero" class="relative overflow-hidden pt-12 pb-24 lg:pt-20 lg:pb-32">
+      <!-- Ambient Backlight -->
+      <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-brand-600/20 via-cyanAccent/15 to-transparent blur-3xl pointer-events-none rounded-full"></div>
+      
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Left Hero Column: Headline & Intro -->
+          <div class="lg:col-span-7 space-y-6 text-left">
+            
+            <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-emerald-950/60 text-emerald-300 border border-emerald-800/60 shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              Ready for Data Analyst Internships & Roles
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
+              Bridging Civic Logic with <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyanAccent via-indigo-400 to-brand-500">Data Analytics</span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl">
+              Hello! I'm <strong class="text-white font-semibold">Insha Ullah</strong>, an aspiring Data Analyst based in New Delhi. Equipped with a diploma in Data Science and hands-on skills in <span class="text-cyanAccent font-medium">Python, SQL, Power BI, and Tableau</span>. I combine a Political Science background with quantitative data modeling to surface impactful, public-facing insights.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center gap-3.5 pt-2">
+              <a href="#projects" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm shadow-lg shadow-brand-500/25 transition-all transform hover:-translate-y-0.5">
+                <i class="fa-solid fa-chart-pie"></i> Explore 4 Projects
+              </a>
+              <button onclick="openResumeModal()" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-slate-200 font-semibold text-sm transition-all shadow-sm">
+                <i class="fa-solid fa-file-invoice text-cyanAccent"></i> View Full Resume
+              </button>
+              <a href="https://github.com/insha-gif" target="_blank" rel="noopener" class="inline-flex items-center justify-center w-11 h-11 rounded-xl border border-slate-700 bg-slate-800/60 text-slate-200 hover:text-cyanAccent hover:border-cyanAccent transition-colors" title="GitHub Repository">
+                <i class="fa-brands fa-github text-lg"></i>
+              </a>
+            </div>
+
+            <!-- Quick Info Strip -->
+            <div class="pt-4 flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400">
+              <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-location-dot text-brand-400"></i> New Delhi, India
+              </div>
+              <span class="text-slate-700">•</span>
+              <div class="flex items-center gap-1.5 cursor-pointer hover:text-cyanAccent transition-colors" onclick="copyToClipboard('inshau48@gmail.com', 'Email copied!')">
+                <i class="fa-solid fa-envelope text-brand-400"></i> inshau48@gmail.com
+              </div>
+              <span class="text-slate-700">•</span>
+              <div class="flex items-center gap-1.5 cursor-pointer hover:text-cyanAccent transition-colors" onclick="copyToClipboard('9599415123', 'Phone copied!')">
+                <i class="fa-solid fa-phone text-brand-400"></i> +91 9599415123
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Hero Column: Interactive 3D Anime Avatar Card -->
+          <div class="lg:col-span-5 flex justify-center avatar-perspective-stage">
+            <div id="characterCard" class="avatar-3d-card w-full max-w-[360px] glass rounded-3xl p-5 border border-brand-500/30 shadow-2xl relative">
+              
+              <!-- Card Top Header -->
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                  <span class="text-[11px] font-mono text-slate-400 ml-1.5">insha_avatar.svg</span>
+                </div>
+                <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyanAccent border border-cyan-800/50 flex items-center gap-1">
+                  <i class="fa-solid fa-eye text-[9px]"></i> TRACKING CURSOR
+                </span>
+              </div>
+
+              <!-- Character Viewport with Vector Studio Ghibli-Style Art & Pupils -->
+              <div class="relative w-full h-[360px] rounded-2xl overflow-hidden bg-gradient-to-b from-[#111928] via-[#0d1424] to-[#090d16] border border-slate-700/60 shadow-inner flex items-center justify-center select-none">
+                
+                <!-- SVG Studio Ghibli Anime Character Art -->
+                <svg id="animeAvatarSvg" class="w-full h-full" viewBox="0 0 400 450" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <!-- Hair Gradient -->
+                    <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#4a2e1b"/>
+                      <stop offset="45%" stop-color="#3d2414"/>
+                      <stop offset="100%" stop-color="#24140b"/>
+                    </linearGradient>
+
+                    <!-- Hair Highlight -->
+                    <linearGradient id="hairHighlight" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#805433" stop-opacity="0.8"/>
+                      <stop offset="100%" stop-color="#4a2e1b" stop-opacity="0"/>
+                    </linearGradient>
+
+                    <!-- Skin Gradient -->
+                    <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#feece0"/>
+                      <stop offset="100%" stop-color="#f5d6c3"/>
+                    </linearGradient>
+
+                    <!-- Cardigan & Collar Gradient -->
+                    <linearGradient id="cardiganGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#fdfbf7"/>
+                      <stop offset="100%" stop-color="#e2dad0"/>
+                    </linearGradient>
+                    <linearGradient id="shirtGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#bae6fd"/>
+                      <stop offset="100%" stop-color="#7dd3fc"/>
+                    </linearGradient>
+
+                    <!-- Eye Shadow Clip -->
+                    <clipPath id="leftEyeClip">
+                      <ellipse cx="165" cy="188" rx="14" ry="17" />
+                    </clipPath>
+                    <clipPath id="rightEyeClip">
+                      <ellipse cx="235" cy="188" rx="14" ry="17" />
+                    </clipPath>
+                  </defs>
+
+                  <!-- Background Ambient Glow behind avatar -->
+                  <circle cx="200" cy="190" r="140" fill="#38bdf8" opacity="0.08" filter="blur(30px)" />
+                  <circle cx="200" cy="300" r="160" fill="#6366f1" opacity="0.08" filter="blur(40px)" />
+
+                  <!-- BACK HAIR MASS -->
+                  <path d="M120 180 C80 230 65 340 70 420 C100 435 140 430 150 370 C130 320 125 240 145 190 Z" fill="url(#hairGrad)" />
+                  <path d="M280 180 C320 230 335 340 330 420 C300 435 260 430 250 370 C270 320 275 240 255 190 Z" fill="url(#hairGrad)" />
+                  <path d="M130 140 C100 180 85 280 100 370 C140 370 170 360 175 320 C140 280 140 210 160 160 Z" fill="url(#hairGrad)" />
+                  <path d="M270 140 C300 180 315 280 300 370 C260 370 230 360 225 320 C260 280 260 210 240 160 Z" fill="url(#hairGrad)" />
+
+                  <!-- NECK -->
+                  <path d="M182 235 L182 280 Q200 292 218 280 L218 235 Z" fill="#ebc5b0" />
+                  <!-- Neck shadow -->
+                  <path d="M182 235 Q200 248 218 235 Q200 252 182 235 Z" fill="#d9ad96" />
+
+                  <!-- CLOTHING: Cardigan & Collar -->
+                  <!-- Shoulders & Cardigan base -->
+                  <path d="M110 330 C125 300 150 285 180 282 L220 282 C250 285 275 300 290 330 L320 450 L80 450 Z" fill="url(#cardiganGrad)" />
+                  
+                  <!-- Blue Inner Collared Shirt -->
+                  <path d="M180 282 L200 340 L220 282 Z" fill="url(#shirtGrad)" />
+                  <!-- Shirt collar leaves -->
+                  <path d="M178 280 L195 325 L200 315 L190 275 Z" fill="#93c5fd" />
+                  <path d="M222 280 L205 325 L200 315 L210 275 Z" fill="#7dd3fc" />
+
+                  <!-- Cardigan V-neck Trim & Knit Lines -->
+                  <path d="M165 288 L200 380 L235 288" fill="none" stroke="#d5ccc1" stroke-width="6" stroke-linecap="round" />
+                  <path d="M188 380 L188 450 M212 380 L212 450" stroke="#d5ccc1" stroke-width="2" stroke-dasharray="3,3" />
+
+                  <!-- EARS -->
+                  <ellipse cx="140" cy="205" rx="9" ry="15" fill="#f5d6c3" transform="rotate(-10 140 205)" />
+                  <ellipse cx="140" cy="205" rx="5" ry="9" fill="#e8baa2" transform="rotate(-10 140 205)" />
+                  <ellipse cx="260" cy="205" rx="9" ry="15" fill="#f5d6c3" transform="rotate(10 260 205)" />
+                  <ellipse cx="260" cy="205" rx="5" ry="9" fill="#e8baa2" transform="rotate(10 260 205)" />
+
+                  <!-- FACE BASE -->
+                  <path d="M142 165 C140 215 158 250 200 256 C242 250 260 215 258 165 C256 125 144 125 142 165 Z" fill="url(#skinGrad)" />
+
+                  <!-- BLUSH ACCENTS -->
+                  <ellipse cx="158" cy="218" rx="10" ry="5" fill="#f87171" opacity="0.25" />
+                  <ellipse cx="242" cy="218" rx="10" ry="5" fill="#f87171" opacity="0.25" />
+
+                  <!-- NOSE & MOUTH (Studio Ghibli style delicate strokes) -->
+                  <path d="M199 208 Q201 216 198 219" stroke="#b98870" stroke-width="2" stroke-linecap="round" fill="none" />
+                  <path d="M192 233 Q200 238 208 233" stroke="#9f5847" stroke-width="2.2" stroke-linecap="round" fill="none" />
+                  <path d="M196 238 Q200 240 204 238" stroke="#d97768" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6" />
+
+                  <!-- EYEBROWS -->
+                  <path d="M152 165 Q168 158 182 166" stroke="#452716" stroke-width="2.6" stroke-linecap="round" fill="none" />
+                  <path d="M218 166 Q232 158 248 165" stroke="#452716" stroke-width="2.6" stroke-linecap="round" fill="none" />
+
+                  <!-- LEFT EYE -->
+                  <g id="leftEyeGroup">
+                    <!-- Sclera (White) -->
+                    <ellipse cx="165" cy="188" rx="14" ry="17" fill="#ffffff" />
+                    <!-- Clip path for Pupil -->
+                    <g clip-path="url(#leftEyeClip)">
+                      <!-- Pupil & Iris Base that follows mouse cursor -->
+                      <g id="leftPupil" class="pupil">
+                        <circle cx="165" cy="189" r="11" fill="#4d2c1d" />
+                        <circle cx="165" cy="190" r="8" fill="#78442b" />
+                        <circle cx="165" cy="191" r="4.5" fill="#1e1008" />
+                        <!-- Anime Sparkle Highlights -->
+                        <circle cx="162" cy="185" r="3.2" fill="#ffffff" />
+                        <circle cx="168" cy="192" r="1.6" fill="#ffffff" opacity="0.85" />
+                      </g>
+                    </g>
+                    <!-- Eyelid / Upper Lash -->
+                    <path class="eye-lid" d="M149 187 C155 174 175 174 181 187" stroke="#23130c" stroke-width="3.2" stroke-linecap="round" fill="none" />
+                    <path d="M154 198 Q165 204 176 198" stroke="#5c3826" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6" />
+                  </g>
+
+                  <!-- RIGHT EYE -->
+                  <g id="rightEyeGroup">
+                    <!-- Sclera (White) -->
+                    <ellipse cx="235" cy="188" rx="14" ry="17" fill="#ffffff" />
+                    <!-- Clip path for Pupil -->
+                    <g clip-path="url(#rightEyeClip)">
+                      <!-- Pupil & Iris Base that follows mouse cursor -->
+                      <g id="rightPupil" class="pupil">
+                        <circle cx="235" cy="189" r="11" fill="#4d2c1d" />
+                        <circle cx="235" cy="190" r="8" fill="#78442b" />
+                        <circle cx="235" cy="191" r="4.5" fill="#1e1008" />
+                        <!-- Anime Sparkle Highlights -->
+                        <circle cx="232" cy="185" r="3.2" fill="#ffffff" />
+                        <circle cx="238" cy="192" r="1.6" fill="#ffffff" opacity="0.85" />
+                      </g>
+                    </g>
+                    <!-- Eyelid / Upper Lash -->
+                    <path class="eye-lid" d="M219 187 C225 174 245 174 251 187" stroke="#23130c" stroke-width="3.2" stroke-linecap="round" fill="none" />
+                    <path d="M224 198 Q235 204 246 198" stroke="#5c3826" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6" />
+                  </g>
+
+                  <!-- FRONT HAIR BANGS & WAVY TRESSES -->
+                  <!-- Crown Volume -->
+                  <path d="M136 150 C136 90 264 90 264 150 C280 180 286 260 284 310 C276 300 270 250 264 210 C260 140 140 140 136 210 C130 250 124 300 116 310 C114 260 120 180 136 150 Z" fill="url(#hairGrad)" />
+                  <!-- Center Bangs -->
+                  <path d="M165 110 Q190 150 185 180 Q178 150 162 140 Z" fill="url(#hairGrad)" />
+                  <path d="M185 110 Q200 155 198 185 Q206 155 212 135 Z" fill="url(#hairGrad)" />
+                  <path d="M205 110 Q220 155 217 180 Q225 150 235 140 Z" fill="url(#hairGrad)" />
+                  <path d="M145 130 Q160 165 158 190 Q152 165 140 155 Z" fill="url(#hairGrad)" />
+                  <path d="M255 130 Q240 165 242 190 Q248 165 260 155 Z" fill="url(#hairGrad)" />
+
+                  <!-- Side wavy locks framing cheeks -->
+                  <path d="M138 180 C132 230 148 280 140 330 C135 280 125 240 130 190 Z" fill="url(#hairGrad)" />
+                  <path d="M262 180 C268 230 252 280 260 330 C265 280 275 240 270 190 Z" fill="url(#hairGrad)" />
+
+                  <!-- Soft Hair sheen / highlight stroke -->
+                  <path d="M150 125 C175 110 225 110 250 125" stroke="url(#hairHighlight)" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.6" />
+                </svg>
+
+                <!-- Interactive Lighting Radial Flare -->
+                <div id="avatarFlare" class="absolute inset-0 pointer-events-none transition-all duration-75 mix-blend-soft-light" style="background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.45) 0%, transparent 70%);"></div>
+
+                <!-- Subtle data badge inside view -->
+                <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-700/60 text-[10px] font-mono text-cyanAccent flex items-center gap-1.5 shadow-sm">
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Ghibli + Python Data Logic
+                </div>
+              </div>
+
+              <!-- Card Bottom Metric Strip -->
+              <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+                <span class="text-slate-400">Head Angle: <span id="tiltVal" class="text-cyanAccent font-semibold">0°</span></span>
+                <span class="text-emerald-400 font-semibold flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Open to Internships
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="py-20 border-y border-slate-800/80 bg-[#0c121e]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="max-w-3xl mb-12">
+          <h2 class="text-xs font-mono font-bold tracking-wider text-cyanAccent uppercase">Professional Narrative</h2>
+          <p class="text-3xl font-extrabold text-white mt-1">Analytical Rigor Meets Civic Insights</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div class="lg:col-span-8 space-y-5 text-slate-300 text-base leading-relaxed">
+            <p>
+              I am an aspiring Data Analyst who bridges technical computation with qualitative social science acumen. With a specialized diploma in Data Science from the <strong class="text-white">Indian Institute of Computer Science (IICS)</strong> and a <strong class="text-white">BA in Political Science (Hons) from IGNOU</strong>, I analyze data through dual lenses: identifying quantitative statistical anomalies while understanding the operational context behind them.
+            </p>
+            <p>
+              Over the course of 4 end-to-end projects, I have constructed reproducible end-to-end workflows: resolving corrupted multiline currency records from Indian election logs, uncovering consumer sales trends using Pandas and Matplotlib, engineering NLP cosine-similarity recommendation systems for streaming platforms, and building Scikit-Learn classification algorithms with high accuracy.
+            </p>
+            <p>
+              My focus is delivering data solutions that translate complex transactional spreadsheets into clean executive dashboards, SQL schemas, and strategic decisions.
+            </p>
+
+            <!-- Language Pill Strip -->
+            <div class="pt-3">
+              <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold mb-3">Multilingual Fluency</h4>
+              <div class="flex flex-wrap gap-2.5">
+                <span class="px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 border border-slate-700 text-slate-200 flex items-center gap-1.5">
+                  <i class="fa-solid fa-language text-brand-400"></i> English <span class="text-slate-500 font-mono text-[10px]">(Professional)</span>
+                </span>
+                <span class="px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 border border-slate-700 text-slate-200 flex items-center gap-1.5">
+                  <i class="fa-solid fa-language text-brand-400"></i> Hindi <span class="text-slate-500 font-mono text-[10px]">(Native)</span>
+                </span>
+                <span class="px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 border border-slate-700 text-slate-200 flex items-center gap-1.5">
+                  <i class="fa-solid fa-language text-brand-400"></i> Urdu <span class="text-slate-500 font-mono text-[10px]">(Fluent)</span>
+                </span>
+                <span class="px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 border border-slate-700 text-slate-200 flex items-center gap-1.5">
+                  <i class="fa-solid fa-language text-brand-400"></i> Spanish <span class="text-slate-500 font-mono text-[10px]">(Elementary)</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stat Snapshot Card -->
+          <div class="lg:col-span-4 p-6 rounded-2xl glass border border-slate-800 space-y-4">
+            <h3 class="font-bold text-white text-base flex items-center gap-2">
+              <i class="fa-solid fa-address-card text-cyanAccent"></i> Profile Snapshot
+            </h3>
+            
+            <div class="space-y-3.5 text-sm">
+              <div>
+                <span class="text-xs text-slate-400 font-mono block">CURRENT LOCATION</span>
+                <span class="font-medium text-slate-200">New Delhi, India</span>
+              </div>
+
+              <div>
+                <span class="text-xs text-slate-400 font-mono block">EMAIL</span>
+                <div class="flex items-center justify-between">
+                  <a href="mailto:inshau48@gmail.com" class="text-cyanAccent hover:underline font-mono text-xs break-all">inshau48@gmail.com</a>
+                  <button onclick="copyToClipboard('inshau48@gmail.com', 'Copied Email!')" class="text-xs text-slate-400 hover:text-white p-1" title="Copy">
+                    <i class="fa-regular fa-copy"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <span class="text-xs text-slate-400 font-mono block">PHONE NUMBER</span>
+                <div class="flex items-center justify-between">
+                  <a href="tel:+919599415123" class="text-slate-200 font-mono text-xs">+91 9599415123</a>
+                  <button onclick="copyToClipboard('9599415123', 'Copied Phone!')" class="text-xs text-slate-400 hover:text-white p-1" title="Copy">
+                    <i class="fa-regular fa-copy"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <span class="text-xs text-slate-400 font-mono block">CODE REPOSITORY</span>
+                <a href="https://github.com/insha-gif" target="_blank" rel="noopener" class="text-cyanAccent hover:underline font-mono text-xs flex items-center gap-1.5 mt-0.5">
+                  github.com/insha-gif <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800">
+              <button onclick="openResumeModal()" class="w-full py-2.5 text-center text-xs font-semibold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-file-pdf text-brand-400"></i> Open Resume PDF View
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="skills" class="py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+          <div>
+            <h2 class="text-xs font-mono font-bold tracking-wider text-cyanAccent uppercase">Competency Stack</h2>
+            <p class="text-3xl font-extrabold text-white mt-1">Tools & Technical Arsenal</p>
+            <p class="text-sm text-slate-400 mt-1 max-w-xl">
+              From relational databases and Python wrangling pipelines to business intelligence dashboards and predictive models.
+            </p>
+          </div>
+
+          <!-- Skill Filter Controls -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div class="relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input 
+                type="text" 
+                id="skillSearch" 
+                placeholder="Search skills (e.g. SQL, Python, Power BI)..." 
+                class="pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-800/80 border border-slate-700 text-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 w-full sm:w-64 placeholder-slate-500"
+                oninput="filterSkills()"
+              />
+            </div>
+
+            <div class="flex items-center gap-1.5 p-1 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs font-medium overflow-x-auto">
+              <button onclick="setSkillCategory('all')" class="skill-tab-btn active-tab px-3 py-1.5 rounded-lg bg-brand-600 text-white font-semibold transition-all" data-cat="all">All</button>
+              <button onclick="setSkillCategory('prog')" class="skill-tab-btn px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all" data-cat="prog">Code & SQL</button>
+              <button onclick="setSkillCategory('bi')" class="skill-tab-btn px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all" data-cat="bi">BI & Viz</button>
+              <button onclick="setSkillCategory('ml')" class="skill-tab-btn px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all" data-cat="ml">AI & ML</button>
+              <button onclick="setSkillCategory('analysis')" class="skill-tab-btn px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all" data-cat="analysis">Analytical</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Skills Grid -->
+        <div id="skillsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+    </section>
+
+    <section id="projects" class="py-20 border-y border-slate-800/80 bg-[#0c121e]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div>
+            <h2 class="text-xs font-mono font-bold tracking-wider text-cyanAccent uppercase">Applied Data Workflows</h2>
+            <p class="text-3xl font-extrabold text-white mt-1">Featured Analytics Projects</p>
+            <p class="text-sm text-slate-400 mt-1 max-w-xl">
+              4 end-to-end projects covering dirty data standardization, exploratory analysis, dashboard visual storytelling, and machine learning models.
+            </p>
+          </div>
+
+          <!-- Project Filter Tabs -->
+          <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-800/90 border border-slate-700/80 overflow-x-auto">
+            <button onclick="filterProjects('all')" class="proj-filter-btn px-4 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 text-white shadow-sm transition-all" data-category="all">All (4)</button>
+            <button onclick="filterProjects('analytics')" class="proj-filter-btn px-4 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-700 transition-all" data-category="analytics">Data Analytics</button>
+            <button onclick="filterProjects('ml')" class="proj-filter-btn px-4 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-700 transition-all" data-category="ml">Machine Learning</button>
+            <button onclick="filterProjects('eda')" class="proj-filter-btn px-4 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-700 transition-all" data-category="eda">Python & EDA</button>
+          </div>
+        </div>
+
+        <!-- 4 Featured Project Cards -->
+        <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <!-- Project 1: Indian Election Data Analysis -->
+          <div class="project-card glass rounded-3xl p-6 border flex flex-col justify-between glass-card" data-type="analytics eda">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full bg-indigo-950/70 text-cyanAccent border border-indigo-800/80">
+                  <i class="fa-solid fa-landmark text-[10px] mr-1"></i> Civic Analytics & PolSci
+                </span>
+                <span class="text-xs font-mono text-slate-400">Python • Pandas • Seaborn</span>
+              </div>
+
+              <h3 class="text-xl font-bold text-white mb-2.5">Indian Election Data Analysis</h3>
+              <p class="text-sm text-slate-300 leading-relaxed mb-5">
+                Standardized unstructured civic election datasets by resolving broken multiline headers, irregular formatting, and Indian currency indicators. Discovered correlations between candidate age, criminal background disclosures, and winning ratios across parties.
+              </p>
+
+              <ul class="space-y-2 mb-6 text-xs text-slate-400">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Standardized raw election data, fixing broken headers, multi line entries and currency formats using python.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Analyzed candidate demographics criminal background distribution and win ratios across political parties.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Visualized key electoral insights party wins, candidate age distribution, total criminal cases using pandas, seaborn and matplotlib.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Pandas</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Seaborn</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Matplotlib</span>
+              </div>
+              <button onclick="openProjectModal('election')" class="text-xs font-semibold text-cyanAccent hover:underline flex items-center gap-1">
+                Deep Dive Modal <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 2: E-Commerce Sales Data Analysis -->
+          <div class="project-card glass rounded-3xl p-6 border flex flex-col justify-between glass-card" data-type="analytics eda">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full bg-emerald-950/70 text-emerald-300 border border-emerald-800/80">
+                  <i class="fa-solid fa-bag-shopping text-[10px] mr-1"></i> Business Intelligence
+                </span>
+                <span class="text-xs font-mono text-slate-400">Pandas • Matplotlib • SQL</span>
+              </div>
+
+              <h3 class="text-xl font-bold text-white mb-2.5">E-Commerce Sales Data Analysis</h3>
+              <p class="text-sm text-slate-300 leading-relaxed mb-5">
+                Cleaned and processed high-volume retail transactions by handling missing entries and irregular dates. Conducted cohort analyses to isolate seasonal trends, customer purchasing frequency, and top revenue-driving products.
+              </p>
+
+              <ul class="space-y-2 mb-6 text-xs text-slate-400">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Cleaned and pre processed raw sales datasets by handling missing values using pandas.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Analyzed customer purchasing patterns and identified top performing product categories.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Created visualizations like bar charts to present sales trends clearly using matplotlib.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Data Cleaning</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Trends</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Matplotlib</span>
+              </div>
+              <button onclick="openProjectModal('ecommerce')" class="text-xs font-semibold text-cyanAccent hover:underline flex items-center gap-1">
+                Deep Dive Modal <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 3: Netflix Movie Recommendation System -->
+          <div class="project-card glass rounded-3xl p-6 border flex flex-col justify-between glass-card" data-type="ml eda">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full bg-rose-950/70 text-rose-300 border border-rose-800/80">
+                  <i class="fa-solid fa-film text-[10px] mr-1"></i> NLP & Recommendation
+                </span>
+                <span class="text-xs font-mono text-slate-400">Python • Cosine Similarity • NLP</span>
+              </div>
+
+              <h3 class="text-xl font-bold text-white mb-2.5">Netflix Movie Recommendation System</h3>
+              <p class="text-sm text-slate-300 leading-relaxed mb-5">
+                Engineered a content-based recommendation engine utilizing Python and natural language processing. Cleaned synopsis keywords, cast metadata, and genres using Pandas, calculating Cosine Similarity to recommend closest catalog titles.
+              </p>
+
+              <ul class="space-y-2 mb-6 text-xs text-slate-400">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Built a content based recommendation system in python to suggest movie/shows based on user preferences.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Cleaned and processed textual data genre, keywords and cast using pandas and applied cosine similarity to measure text closeness.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Performed Exploratory Data Analysis to find top genres and release trends, creating stunning visual plots using Matplotlib and Seaborn.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">NLP</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Cosine Similarity</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">EDA Plots</span>
+              </div>
+              <button onclick="openProjectModal('netflix')" class="text-xs font-semibold text-cyanAccent hover:underline flex items-center gap-1">
+                Deep Dive Modal <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 4: Iris Flower Classification -->
+          <div class="project-card glass rounded-3xl p-6 border flex flex-col justify-between glass-card" data-type="ml">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full bg-amber-950/70 text-amber-300 border border-amber-800/80">
+                  <i class="fa-solid fa-brain text-[10px] mr-1"></i> Supervised Machine Learning
+                </span>
+                <span class="text-xs font-mono text-slate-400">Scikit-Learn • Logistic Regression</span>
+              </div>
+
+              <h3 class="text-xl font-bold text-white mb-2.5">Iris Flower Classification</h3>
+              <p class="text-sm text-slate-300 leading-relaxed mb-5">
+                Constructed a multiclass machine learning classification algorithm to accurately categorize botanical specimens. Implemented feature scaling, train-test validation splits, and high model accuracy using Logistic Regression.
+              </p>
+
+              <ul class="space-y-2 mb-6 text-xs text-slate-400">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Built a machine learning classification model to predict flower species based on physical feature.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Utilized Scikit-Learn to train the model and split the dataset into training and testing.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                  <span>Achieved high model accuracy using a standard Logistic Regression algorithm.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Scikit-Learn</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Logistic Regression</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Model Eval</span>
+              </div>
+              <button onclick="openProjectModal('iris')" class="text-xs font-semibold text-cyanAccent hover:underline flex items-center gap-1">
+                Deep Dive Modal <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section id="analytics-demo" class="py-20 relative overflow-hidden bg-[#090d16]">
+      <div class="absolute -top-24 right-1/4 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-cyan-950/80 text-cyan-300 border border-cyan-800 mb-3">
+              <i class="fa-solid fa-sliders text-[11px]"></i> Live Analytics Sandbox
+            </div>
+            <h2 class="text-3xl font-extrabold text-white">Interactive Insight Simulator</h2>
+            <p class="text-slate-400 text-sm mt-1 max-w-xl">
+              Interact with simulated metrics representing real datasets from Insha's Indian Election and E-Commerce analyses.
+            </p>
+          </div>
+
+          <!-- Dataset Toggle Buttons -->
+          <div class="flex flex-wrap items-center gap-2 bg-slate-800/90 p-1.5 rounded-2xl border border-slate-700">
+            <button id="btnElection" onclick="switchLiveDataset('election')" class="px-4 py-2 rounded-xl text-xs font-semibold bg-brand-600 text-white transition-all shadow-sm">
+              <i class="fa-solid fa-landmark mr-1.5"></i> Election Demographics
+            </button>
+            <button id="btnEcommerce" onclick="switchLiveDataset('ecommerce')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white transition-all">
+              <i class="fa-solid fa-cart-shopping mr-1.5"></i> E-Commerce Categories
+            </button>
+          </div>
+        </div>
+
+        <!-- Chart Grid Stage -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          
+          <div class="lg:col-span-8 bg-slate-900/90 p-6 rounded-3xl border border-slate-800 flex flex-col justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div>
+                <h4 id="chartTitle" class="text-base font-bold text-white">Candidate Demographics vs Party Seat Share</h4>
+                <p id="chartSubtitle" class="text-xs text-slate-400 font-mono">Sample aggregation from cleaned electoral affidavits</p>
+              </div>
+              <button onclick="toggleChartType()" class="self-start sm:self-auto px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">
+                <i class="fa-solid fa-rotate mr-1 text-cyanAccent"></i> Change Chart Type
+              </button>
+            </div>
+
+            <!-- Canvas Wrapper -->
+            <div class="relative w-full h-[320px]">
+              <canvas id="livePortfolioChart"></canvas>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+              <span id="dataStatusIndicator"><i class="fa-solid fa-circle text-[8px] text-emerald-400 mr-1.5"></i>Pipeline: Pandas Normalized</span>
+              <span>Rendered with Chart.js</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Inferences Sidebar -->
+          <div class="lg:col-span-4 flex flex-col justify-between gap-4">
+            <div class="bg-slate-900/90 p-6 rounded-3xl border border-slate-800 space-y-4">
+              <h4 class="text-xs font-mono text-cyanAccent uppercase font-bold tracking-wider">Key Inferences & Insights</h4>
+              <div id="dynamicInferenceText" class="space-y-3 text-xs text-slate-300 leading-relaxed">
+                <!-- Dynamically updated -->
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-brand-900/40 to-slate-900/80 p-5 rounded-3xl border border-brand-800/40 flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-brand-600/30 flex items-center justify-center text-cyanAccent text-xl shrink-0">
+                <i class="fa-solid fa-lightbulb"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white">Analytical Takeaway</div>
+                <div class="text-[11px] text-slate-300 mt-0.5">Combining domain awareness with statistical plotting surfaces trends that raw spreadsheets conceal.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section id="education" class="py-20 border-y border-slate-800/80 bg-[#0c121e]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="max-w-3xl mb-14">
+          <h2 class="text-xs font-mono font-bold tracking-wider text-cyanAccent uppercase">Academic Milestones</h2>
+          <p class="text-3xl font-extrabold text-white mt-1">Education & Foundations</p>
+          <p class="text-sm text-slate-400 mt-1">
+            Blending structured data science curriculum with political science reasoning and quantitative training.
+          </p>
+        </div>
+
+        <div class="relative border-l-2 border-slate-800 ml-4 md:ml-36 space-y-12">
+          
+          <!-- Education 1: Data Science -->
+          <div class="relative pl-8 md:pl-10 group">
+            <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-brand-500 border-4 border-[#0c121e] group-hover:scale-125 transition-transform"></div>
+            
+            <div class="md:absolute md:-left-40 md:top-1 text-xs font-mono font-semibold text-cyanAccent md:text-right md:w-32 mb-1 md:mb-0">
+              07/2025 - 08/2026
+            </div>
+
+            <div class="glass p-6 rounded-2xl border border-slate-800">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <h3 class="text-lg font-bold text-white">Data Science Diploma</h3>
+                <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-950/70 text-emerald-300 border border-emerald-800/50">
+                  Technical Training
+                </span>
+              </div>
+              <p class="text-sm font-semibold text-brand-400 mt-1">Indian Institute Of Computer Science (IICS)</p>
+              <div class="text-xs text-slate-400 font-mono mt-0.5 mb-3">New Delhi, India</div>
+              
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Specialized training in Python, SQL databases, Power BI, Tableau, MongoDB, Pandas, NumPy, Scikit-Learn, data visualization, MIS reporting, and prompt engineering for data workflows.
+              </p>
+            </div>
+          </div>
+
+          <!-- Education 2: BA Political Science -->
+          <div class="relative pl-8 md:pl-10 group">
+            <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 border-4 border-[#0c121e] group-hover:scale-125 transition-transform"></div>
+            
+            <div class="md:absolute md:-left-40 md:top-1 text-xs font-mono font-semibold text-slate-400 md:text-right md:w-32 mb-1 md:mb-0">
+              06/2021 - 07/2024
+            </div>
+
+            <div class="glass p-6 rounded-2xl border border-slate-800">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <h3 class="text-lg font-bold text-white">BA Political Science (Honours)</h3>
+                <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                  Undergraduate Degree
+                </span>
+              </div>
+              <p class="text-sm font-semibold text-brand-400 mt-1">Indira Gandhi National Open University (IGNOU)</p>
+              <div class="text-xs text-slate-400 font-mono mt-0.5 mb-3">New Delhi, India</div>
+              
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Formed strong analytical foundations in policy analysis, social research methodologies, institutional governance, critical thinking, and institutional data interpretation.
+              </p>
+            </div>
+          </div>
+
+          <!-- Education 3: School of Excellence -->
+          <div class="relative pl-8 md:pl-10 group">
+            <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-slate-500 border-4 border-[#0c121e] group-hover:scale-125 transition-transform"></div>
+            
+            <div class="md:absolute md:-left-40 md:top-1 text-xs font-mono font-semibold text-slate-400 md:text-right md:w-32 mb-1 md:mb-0">
+              04/2020 - 06/2021
+            </div>
+
+            <div class="glass p-6 rounded-2xl border border-slate-800">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <h3 class="text-lg font-bold text-white">Senior Secondary (12th Grade)</h3>
+                <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                  High School
+                </span>
+              </div>
+              <p class="text-sm font-semibold text-brand-400 mt-1">School Of Excellence</p>
+              <div class="text-xs text-slate-400 font-mono mt-0.5 mb-3">New Delhi, India</div>
+              
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Completed secondary school with distinction, developing core quantitative comprehension, logic, and collaborative skills.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section id="certifications" class="py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="max-w-3xl mb-12">
+          <h2 class="text-xs font-mono font-bold tracking-wider text-cyanAccent uppercase">Verified Knowledge</h2>
+          <p class="text-3xl font-extrabold text-white mt-1">Certifications & Credentials</p>
+          <p class="text-sm text-slate-400 mt-1">
+            Certifications covering data science, AI foundations, and professional personality growth.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- Cert 1: Google Analytics -->
+          <div class="glass p-6 rounded-2xl border border-slate-800 relative flex flex-col justify-between glass-card">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Google Analytics Certification</h3>
+              <p class="text-xs font-semibold text-cyanAccent mt-0.5">Google</p>
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                Event measurement, audience segmentation, conversion attribution tracking, and dashboard reporting.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+              <span class="text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Verified</span>
+            </div>
+          </div>
+
+          <!-- Cert 2: Intro to Generative AI -->
+          <div class="glass p-6 rounded-2xl border border-slate-800 relative flex flex-col justify-between glass-card">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Introduction to Generative AI</h3>
+              <p class="text-xs font-semibold text-cyanAccent mt-0.5">Google</p>
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                Core concepts of Large Language Models (LLMs), attention principles, and prompt engineering strategies.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+              <span class="text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Verified</span>
+            </div>
+          </div>
+
+          <!-- Cert 3: Data Science Training IICS -->
+          <div class="glass p-6 rounded-2xl border border-slate-800 relative flex flex-col justify-between glass-card">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-database"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Data Science Training</h3>
+              <p class="text-xs font-semibold text-cyanAccent mt-0.5">Indian Institute Of Computer Science (IICS)</p>
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                Extensive curriculum spanning SQL, Python scripting, Pandas data cleaning, and Power BI visualization.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+              <span class="text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Verified</span>
+            </div>
+          </div>
+
+          <!-- Cert 4: Basics of AI UniAthena -->
+          <div class="glass p-6 rounded-2xl border border-slate-800 relative flex flex-col justify-between glass-card">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-brain"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Basic Of Artificial Intelligence</h3>
+              <p class="text-xs font-semibold text-cyanAccent mt-0.5">UniAthena & Cambridge Int. Qualifications</p>
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                Machine learning paradigms, classification structures, neural logic, and algorithmic architectures.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+              <span class="text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Verified</span>
+            </div>
+          </div>
+
+          <!-- Cert 5: Skill & Personality Magic Bus -->
+          <div class="glass p-6 rounded-2xl border border-slate-800 relative flex flex-col justify-between glass-card">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-user-check"></i>
+              </div>
+              <h3 class="font-bold text-white text-base">Skill & Personality Development</h3>
+              <p class="text-xs font-semibold text-cyanAccent mt-0.5">Magic Bus Foundation</p>
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                Executive communication, professional stakeholder engagement, problem-solving, and teamwork.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+              <span class="text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Verified</span>
+            </div>
+          </div>
+
+          <!-- Cert 6: Quick Action Box -->
+          <div class="p-6 rounded-2xl bg-gradient-to-br from-brand-600 to-indigo-900 text-white flex flex-col justify-between shadow-xl">
+            <div>
+              <span class="text-[11px] font-mono uppercase bg-white/20 px-2.5 py-0.5 rounded text-white font-medium">Internship Ready</span>
+              <h3 class="font-bold text-lg mt-3">Ready to contribute to your data team</h3>
+              <p class="text-xs text-indigo-100 mt-2 leading-relaxed">
+                Prepared to assist with data cleaning pipelines, SQL reports, Tableau dashboards, and exploratory modeling.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-white/20">
+              <a href="#contact" class="inline-flex items-center gap-2 text-xs font-bold bg-white text-brand-700 px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors">
+                Connect Directly <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section id="contact" class="py-20 border-t border-slate-800/80 bg-[#0c121e]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          <!-- Contact Methods Left Column -->
+          <div class="lg:col-span-5 space-y-6">
+            <div>
+              <h2 class="text-xs font-mono font-bold tracking-wider text-cyanAccent uppercase">Let's Connect</h2>
+              <p class="text-3xl font-extrabold text-white mt-1">Get In Touch</p>
+              <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+                Whether you have an internship opening, data project, or wish to review my notebooks, feel free to reach out.
+              </p>
+            </div>
+
+            <div class="space-y-4">
+              
+              <div class="flex items-center justify-between p-4 rounded-2xl glass border border-slate-800">
+                <div class="flex items-center gap-3.5">
+                  <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-cyanAccent flex items-center justify-center">
+                    <i class="fa-solid fa-envelope"></i>
+                  </div>
+                  <div>
+                    <span class="text-[11px] font-mono text-slate-400 block">EMAIL ADDRESS</span>
+                    <a href="mailto:inshau48@gmail.com" class="text-sm font-semibold text-white hover:text-cyanAccent">inshau48@gmail.com</a>
+                  </div>
+                </div>
+                <button onclick="copyToClipboard('inshau48@gmail.com', 'Copied Email!')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors" title="Copy email">
+                  <i class="fa-regular fa-copy text-sm"></i>
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between p-4 rounded-2xl glass border border-slate-800">
+                <div class="flex items-center gap-3.5">
+                  <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                    <i class="fa-solid fa-phone"></i>
+                  </div>
+                  <div>
+                    <span class="text-[11px] font-mono text-slate-400 block">PHONE NUMBER</span>
+                    <a href="tel:+919599415123" class="text-sm font-semibold text-white hover:text-emerald-400 font-mono">+91 9599415123</a>
+                  </div>
+                </div>
+                <button onclick="copyToClipboard('9599415123', 'Copied Phone Number!')" class="p-2 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-slate-800 transition-colors" title="Copy phone">
+                  <i class="fa-regular fa-copy text-sm"></i>
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between p-4 rounded-2xl glass border border-slate-800">
+                <div class="flex items-center gap-3.5">
+                  <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                    <i class="fa-brands fa-github"></i>
+                  </div>
+                  <div>
+                    <span class="text-[11px] font-mono text-slate-400 block">GITHUB PROFILE</span>
+                    <a href="https://github.com/insha-gif" target="_blank" rel="noopener" class="text-sm font-semibold text-white hover:text-purple-400 font-mono">github.com/insha-gif</a>
+                  </div>
+                </div>
+                <a href="https://github.com/insha-gif" target="_blank" rel="noopener" class="p-2 rounded-lg text-slate-400 hover:text-purple-400 hover:bg-slate-800 transition-colors" title="Open GitHub">
+                  <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                </a>
+              </div>
+
+              <div class="flex items-center gap-3.5 p-4 rounded-2xl glass border border-slate-800">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                  <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div>
+                  <span class="text-[11px] font-mono text-slate-400 block">LOCATION</span>
+                  <span class="text-sm font-semibold text-white">New Delhi, India (Open to hybrid, onsite & remote)</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Resume Download Button -->
+            <button onclick="openResumeModal()" class="w-full py-3.5 px-4 rounded-2xl border-2 border-dashed border-brand-500/40 hover:border-cyanAccent bg-slate-900/60 text-cyanAccent font-semibold text-sm flex items-center justify-center gap-2 transition-all hover:bg-slate-900">
+              <i class="fa-solid fa-file-pdf text-base"></i> View Complete Resume Document
+            </button>
+          </div>
+
+          <!-- Contact Form Right Column -->
+          <div class="lg:col-span-7">
+            <div class="glass p-8 rounded-3xl border border-slate-800 shadow-2xl">
+              <h3 class="text-xl font-bold text-white mb-2">Send Direct Message</h3>
+              <p class="text-xs text-slate-400 mb-6">Drop a message directly to Insha's inbox.</p>
+              
+              <form id="portfolioContactForm" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-mono font-medium text-slate-300 mb-1.5" for="senderName">Your Name *</label>
+                    <input 
+                      type="text" 
+                      id="senderName" 
+                      required 
+                      placeholder="e.g. Hiring Manager" 
+                      class="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder-slate-500"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-mono font-medium text-slate-300 mb-1.5" for="senderEmail">Email Address *</label>
+                    <input 
+                      type="email" 
+                      id="senderEmail" 
+                      required 
+                      placeholder="name@company.com" 
+                      class="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder-slate-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-mono font-medium text-slate-300 mb-1.5" for="inquirySubject">Subject</label>
+                  <input 
+                    type="text" 
+                    id="inquirySubject" 
+                    placeholder="Data Analyst Intern Opportunity" 
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder-slate-500"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-xs font-mono font-medium text-slate-300 mb-1.5" for="senderMessage">Message *</label>
+                  <textarea 
+                    id="senderMessage" 
+                    rows="4" 
+                    required 
+                    placeholder="Hello Insha, I saw your election analysis project and would like to talk about an internship..." 
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder-slate-500"
+                  ></textarea>
+                </div>
+
+                <button 
+                  type="submit" 
+                  id="submitBtn"
+                  class="w-full py-3.5 px-6 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition-all shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2"
+                >
+                  <i class="fa-solid fa-paper-plane"></i> Send Message
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-800/80 py-8 bg-[#070b12] text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white">Insha Ullah</span>
+        <span>•</span>
+        <span>Data Analyst Intern Portfolio</span>
+        <span>•</span>
+        <span>New Delhi</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="https://github.com/insha-gif" target="_blank" rel="noopener" class="hover:text-cyanAccent transition-colors">
+          <i class="fa-brands fa-github text-base"></i>
+        </a>
+        <a href="mailto:inshau48@gmail.com" class="hover:text-cyanAccent transition-colors">
+          <i class="fa-solid fa-envelope text-base"></i>
+        </a>
+        <a href="#hero" class="hover:text-cyanAccent transition-colors flex items-center gap-1 font-mono">
+          Back to Top <i class="fa-solid fa-arrow-up text-[10px]"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Project Deep-Dive Modal -->
+  <div id="projectModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+    <div class="relative w-full max-w-2xl bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-800 max-h-[90vh] overflow-y-auto">
+      <button onclick="closeProjectModal()" class="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors" aria-label="Close modal">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div id="modalContent">
+        <!-- Injected via openProjectModal(id) -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete Resume Full View Modal -->
+  <div id="resumeModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+    <div class="relative w-full max-w-3xl bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-800 max-h-[90vh] overflow-y-auto space-y-6">
+      
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div>
+          <h3 class="text-xl font-bold text-white">Insha Ullah — Resume Summary</h3>
+          <p class="text-xs text-slate-400 font-mono">Data Analyst Intern • New Delhi</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="copyToClipboard('Insha Ullah | inshau48@gmail.com | 9599415123 | github.com/insha-gif', 'Resume summary copied!')" class="px-3 py-1.5 rounded-lg text-xs font-mono border border-slate-700 hover:bg-slate-800 text-slate-300">
+            <i class="fa-regular fa-copy mr-1"></i> Copy
+          </button>
+          <button onclick="closeResumeModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-6 text-sm text-slate-300">
+        
+        <div class="text-center space-y-1 pb-4 border-b border-slate-800">
+          <h2 class="text-2xl font-bold text-white">INSHA ULLAH</h2>
+          <p class="text-xs text-cyanAccent font-mono">DATA ANALYST INTERN</p>
+          <p class="text-xs text-slate-400 font-mono">
+            New Delhi • inshau48@gmail.com • +91 9599415123 • github.com/insha-gif
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-cyanAccent mb-1.5">Summary</h4>
+          <p class="text-xs leading-relaxed text-slate-300">
+            Aspiring Data Analyst with a diploma in data science and hands-on skills in Python, SQL, and Power BI/Tableau. Completed 4 end-to-end projects covering data cleaning, exploratory analysis, and dashboard creation, including an election-data analysis that combines a Political Science background with data visualization to surface public-facing insights. Seeking a Data Analyst internship to apply analytical and technical skills to real-world business problems.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-cyanAccent mb-2">Core Skills & Tools</h4>
+          <p class="text-xs leading-relaxed text-slate-300">
+            <strong>Tools & Languages:</strong> Python, SQL, Power BI, Tableau, MongoDB, Pandas, NumPy, Matplotlib, scikit-learn, Seaborn, AI, Machine Learning, MIS, Git, VBA, Prompt Engineering.<br>
+            <strong>Analytical Capabilities:</strong> Data Analysis, Data Cleaning, Data Visualization, Communication, Management, Critical Thinking, Problem Solving, Data Driven Decision Making.<br>
+            <strong>Languages:</strong> English, Hindi, Urdu, Spanish.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-cyanAccent mb-2">Projects</h4>
+          <div class="space-y-3 text-xs">
+            <div>
+              <p class="font-bold text-white">1. Indian Election Data Analysis</p>
+              <p class="text-slate-400">• Standardized raw election data, fixing broken headers, multi line entries and currency formats using python.<br>• Analyzed candidate demographics criminal background distribution and win ratios across political parties.<br>• Visualized key electoral insights party wins, candidate age distribution, total criminal cases using pandas, seaborn and matplotlib.</p>
+            </div>
+            <div>
+              <p class="font-bold text-white">2. E-Commerce Sales Data Analysis</p>
+              <p class="text-slate-400">• Cleaned and pre processed raw sales datasets by handling missing values using pandas.<br>• Analyzed customer purchasing patterns and identified top performing product categories.<br>• Created visualizations like bar charts to present sales trends clearly using matplotlib.</p>
+            </div>
+            <div>
+              <p class="font-bold text-white">3. Netflix Movie Recommendation System</p>
+              <p class="text-slate-400">• Built a content based recommendation system in python to suggest movie/shows based on user preferences.<br>• Cleaned and processed textual data genre, keywords and cast using pandas and applied cosine similarity to measure text closeness.<br>• Performed Exploratory Data Analysis to find top genres and release trends, creating stunning visual plots using Matplotlib and Seaborn.</p>
+            </div>
+            <div>
+              <p class="font-bold text-white">4. Iris Flower Classification</p>
+              <p class="text-slate-400">• Built a machine learning classification model to predict flower species based on physical feature.<br>• Utilized Scikit-Learn to train the model and split the dataset into training and testing.<br>• Achieved high model accuracy using a standard Logistic Regression algorithm.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-cyanAccent mb-2">Education</h4>
+          <div class="space-y-2 text-xs text-slate-300">
+            <p><strong>Data Science:</strong> Indian Institute Of Computer Science (07/2025 - 08/2026, New Delhi)</p>
+            <p><strong>BA Political Science Hons:</strong> Indira Gandhi National Open University (06/2021 - 07/2024, New Delhi)</p>
+            <p><strong>12th:</strong> School Of Excellence (04/2020 - 06/2021, New Delhi)</p>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-cyanAccent mb-2">Certifications</h4>
+          <div class="space-y-1 text-xs text-slate-400">
+            <p>• Data Science Training — IICS</p>
+            <p>• Introduction To Generative AI — Google</p>
+            <p>• Skill And Personality Development — Magic Bus Foundation</p>
+            <p>• Basic Of Artificial Intelligence — UniAthena & Cambridge International Qualifications</p>
+            <p>• Google Analytics Certification</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+        <span class="text-xs text-slate-500 font-mono">Document view ready</span>
+        <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-2">
+          <i class="fa-solid fa-print"></i> Print / Save PDF
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. INTERACTIVE 3D ANIME AVATAR (PUPIL TRACKING, HEAD TILT & BLINK)
+       ========================================================================== */
+    const characterCard = document.getElementById('characterCard');
+    const leftPupil = document.getElementById('leftPupil');
+    const rightPupil = document.getElementById('rightPupil');
+    const avatarSvg = document.getElementById('animeAvatarSvg');
+    const avatarFlare = document.getElementById('avatarFlare');
+    const tiltVal = document.getElementById('tiltVal');
+
+    // Natural blinking interval
+    function triggerBlink() {
+      avatarSvg.classList.add('blinking');
+      setTimeout(() => {
+        avatarSvg.classList.remove('blinking');
+      }, 160);
+      const nextBlink = Math.random() * 4000 + 2500;
+      setTimeout(triggerBlink, nextBlink);
+    }
+    setTimeout(triggerBlink, 3000);
+
+    // Mouse movement listener for 3D tilt and pupil tracking
+    window.addEventListener('mousemove', (e) => {
+      if (!characterCard) return;
+
+      const rect = characterCard.getBoundingClientRect();
+      const cardCenterX = rect.left + rect.width / 2;
+      const cardCenterY = rect.top + rect.height / 2;
+
+      // Coordinate delta normalized from -1 to 1
+      const deltaX = (e.clientX - cardCenterX) / (window.innerWidth / 2);
+      const deltaY = (e.clientY - cardCenterY) / (window.innerHeight / 2);
+
+      // Max 3D Tilt angles (Up, Down, Left, Right)
+      const maxTilt = 18;
+      const rotateX = -(deltaY * maxTilt).toFixed(1);
+      const rotateY = (deltaX * maxTilt).toFixed(1);
+
+      characterCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+
+      if (tiltVal) {
+        tiltVal.textContent = `${rotateY > 0 ? '+' : ''}${rotateY}° / ${rotateX > 0 ? '+' : ''}${rotateX}°`;
+      }
+
+      // Eye Pupil physical displacement (clamped within eye socket)
+      const maxPupilShiftX = 6.0;
+      const maxPupilShiftY = 5.0;
+      const pupilX = (Math.max(-1, Math.min(1, deltaX * 1.4)) * maxPupilShiftX).toFixed(2);
+      const pupilY = (Math.max(-1, Math.min(1, deltaY * 1.4)) * maxPupilShiftY).toFixed(2);
+
+      if (leftPupil && rightPupil) {
+        leftPupil.style.transform = `translate(${pupilX}px, ${pupilY}px)`;
+        rightPupil.style.transform = `translate(${pupilX}px, ${pupilY}px)`;
+      }
+
+      // Flare coordinate tracking
+      if (avatarFlare) {
+        const flareX = Math.round(50 + deltaX * 35);
+        const flareY = Math.round(50 + deltaY * 35);
+        avatarFlare.style.background = `radial-gradient(circle at ${flareX}% ${flareY}%, rgba(56, 189, 248, 0.35) 0%, transparent 65%)`;
+      }
+    });
+
+    // Reset card when mouse leaves window
+    window.addEventListener('mouseleave', () => {
+      if (!characterCard) return;
+      characterCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      if (leftPupil && rightPupil) {
+        leftPupil.style.transform = 'translate(0px, 0px)';
+        rightPupil.style.transform = 'translate(0px, 0px)';
+      }
+      if (tiltVal) tiltVal.textContent = '0°';
+    });
+
+    /* ==========================================================================
+       2. SKILLS DIRECTORY & DYNAMIC FILTERING
+       ========================================================================== */
+    const skillsList = [
+      { name: 'Python', category: 'prog', level: 'Advanced', icon: 'fa-brands fa-python', color: 'text-amber-400' },
+      { name: 'SQL', category: 'prog', level: 'Advanced', icon: 'fa-solid fa-database', color: 'text-blue-400' },
+      { name: 'Power BI', category: 'bi', level: 'Intermediate', icon: 'fa-solid fa-chart-simple', color: 'text-yellow-400' },
+      { name: 'Tableau', category: 'bi', level: 'Intermediate', icon: 'fa-solid fa-chart-pie', color: 'text-indigo-400' },
+      { name: 'Pandas', category: 'prog', level: 'Advanced', icon: 'fa-solid fa-table-cells', color: 'text-emerald-400' },
+      { name: 'NumPy', category: 'prog', level: 'Intermediate', icon: 'fa-solid fa-square-root-variable', color: 'text-cyan-400' },
+      { name: 'MongoDB', category: 'prog', level: 'Intermediate', icon: 'fa-solid fa-leaf', color: 'text-green-400' },
+      { name: 'Matplotlib', category: 'bi', level: 'Advanced', icon: 'fa-solid fa-chart-line', color: 'text-orange-400' },
+      { name: 'Seaborn', category: 'bi', level: 'Advanced', icon: 'fa-solid fa-chart-area', color: 'text-teal-400' },
+      { name: 'Scikit-Learn', category: 'ml', level: 'Intermediate', icon: 'fa-solid fa-brain', color: 'text-orange-400' },
+      { name: 'Machine Learning', category: 'ml', level: 'Intermediate', icon: 'fa-solid fa-robot', color: 'text-purple-400' },
+      { name: 'Generative AI', category: 'ml', level: 'Certified', icon: 'fa-solid fa-wand-magic-sparkles', color: 'text-pink-400' },
+      { name: 'Prompt Engineering', category: 'ml', level: 'Intermediate', icon: 'fa-solid fa-terminal', color: 'text-indigo-400' },
+      { name: 'Git & GitHub', category: 'prog', level: 'Intermediate', icon: 'fa-brands fa-git-alt', color: 'text-rose-400' },
+      { name: 'VBA / Excel', category: 'prog', level: 'Intermediate', icon: 'fa-solid fa-file-excel', color: 'text-emerald-500' },
+      { name: 'MIS Reporting', category: 'bi', level: 'Intermediate', icon: 'fa-solid fa-file-invoice', color: 'text-blue-500' },
+      { name: 'Data Cleaning', category: 'analysis', level: 'Specialist', icon: 'fa-solid fa-broom', color: 'text-amber-400' },
+      { name: 'Data Visualization', category: 'analysis', level: 'Specialist', icon: 'fa-solid fa-diagram-project', color: 'text-cyan-400' },
+      { name: 'Exploratory Analysis', category: 'analysis', level: 'Specialist', icon: 'fa-solid fa-magnifying-glass-chart', color: 'text-sky-400' },
+      { name: 'Critical Thinking', category: 'analysis', level: 'PolSci Core', icon: 'fa-solid fa-lightbulb', color: 'text-amber-300' },
+      { name: 'Problem Solving', category: 'analysis', level: 'Core', icon: 'fa-solid fa-puzzle-piece', color: 'text-indigo-400' },
+      { name: 'Decision Making', category: 'analysis', level: 'Data-Driven', icon: 'fa-solid fa-compass', color: 'text-emerald-400' },
+      { name: 'Communication', category: 'analysis', level: 'Magic Bus Cert', icon: 'fa-solid fa-comments', color: 'text-sky-400' },
+      { name: 'Google Analytics', category: 'bi', level: 'Certified', icon: 'fa-brands fa-google', color: 'text-yellow-500' }
+    ];
+
+    let currentSkillCat = 'all';
+
+    function renderSkills(filterQuery = '') {
+      const container = document.getElementById('skillsGrid');
+      const q = filterQuery.toLowerCase().trim();
+
+      const filtered = skillsList.filter(s => {
+        const matchesCategory = currentSkillCat === 'all' || s.category === currentSkillCat;
+        const matchesQuery = !q || s.name.toLowerCase().includes(q);
+        return matchesCategory && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-10 text-center text-slate-500">
+            <i class="fa-solid fa-magnifying-glass text-2xl mb-2 block"></i>
+            No skills found matching "${filterQuery}"
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(skill => `
+        <div class="glass p-4 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-cyanAccent/50 transition-all duration-200 group">
+          <div class="flex items-center justify-between mb-2">
+            <i class="${skill.icon} ${skill.color} text-xl group-hover:scale-110 transition-transform"></i>
+            <span class="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">${skill.level}</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-white block group-hover:text-cyanAccent transition-colors">${skill.name}</span>
+            <span class="text-[10px] text-slate-400 font-mono capitalize">${getCatName(skill.category)}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getCatName(cat) {
+      switch(cat) {
+        case 'prog': return 'Code & Query';
+        case 'bi': return 'BI & Viz';
+        case 'ml': return 'AI & Models';
+        case 'analysis': return 'Analytical';
+        default: return 'Skill';
+      }
+    }
+
+    function setSkillCategory(cat) {
+      currentSkillCat = cat;
+      document.querySelectorAll('.skill-tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.className = 'skill-tab-btn active-tab px-3 py-1.5 rounded-lg bg-brand-600 text-white font-semibold transition-all';
+        } else {
+          btn.className = 'skill-tab-btn px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all';
+        }
+      });
+      renderSkills(document.getElementById('skillSearch').value);
+    }
+
+    function filterSkills() {
+      const q = document.getElementById('skillSearch').value;
+      renderSkills(q);
+    }
+
+    /* ==========================================================================
+       3. PROJECT CATEGORY FILTER & MODALS
+       ========================================================================== */
+    function filterProjects(cat) {
+      const cards = document.querySelectorAll('.project-card');
+      const buttons = document.querySelectorAll('.proj-filter-btn');
+
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-category') === cat) {
+          btn.className = 'proj-filter-btn px-4 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 text-white shadow-sm transition-all';
+        } else {
+          btn.className = 'proj-filter-btn px-4 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-700 transition-all';
+        }
+      });
+
+      cards.forEach(card => {
+        const types = card.getAttribute('data-type');
+        if (cat === 'all' || types.includes(cat)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    const projectData = {
+      election: {
+        title: 'Indian Election Data Analysis',
+        badge: 'Civic Analytics • PolSci Background Focus',
+        tools: 'Python, Pandas, Seaborn, Matplotlib, Data Cleaning',
+        summary: 'Standardized raw election data, fixing broken headers, multi line entries and currency formats using python. Analyzed candidate demographics criminal background distribution and win ratios across political parties. Visualized key electoral insights party wins, candidate age distribution, total criminal cases using pandas, seaborn and matplotlib.',
+        challenge: 'Electoral filings and affidavits contained broken multiline rows, non-standard currency units (Lakhs/Crores), and incomplete candidate disclosures.',
+        solution: 'Wrote robust Python data transformation routines to standardize currency formatting, normalize broken headers, and build cross-tabulations on criminal disclosures vs. seat wins.',
+        highlights: ['10,000+ Raw Rows Standardized', 'Candidate Demographics Mapped', 'Publication-grade Seaborn Plots']
+      },
+      ecommerce: {
+        title: 'E-Commerce Sales Data Analysis',
+        badge: 'Business Intelligence & Revenue Trends',
+        tools: 'Python, Pandas, Matplotlib, Data Preprocessing',
+        summary: 'Cleaned and pre processed raw sales datasets by handling missing values using pandas. Analyzed customer purchasing patterns and identified top performing product categories. Created visualizations like bar charts to present sales trends clearly using matplotlib.',
+        challenge: 'Dirty transaction sets containing missing customer keys, null dates, and erratic negative returns across disparate quarters.',
+        solution: 'Handled missing values systematically with Pandas, grouped transactional velocity, calculated category revenue contribution, and generated bar charts for executive reviews.',
+        highlights: ['Zero Missing Values Unhandled', 'Top Category Margin Isolation', 'Trend Analysis via Matplotlib']
+      },
+      netflix: {
+        title: 'Netflix Movie Recommendation System',
+        badge: 'NLP & Content-Based Filtering',
+        tools: 'Python, Scikit-Learn, Cosine Similarity, Seaborn',
+        summary: 'Built a content based recommendation system in python to suggest movie/shows based on user preferences. Cleaned and processed textual data genre, keywords and cast using pandas and applied cosine similarity to measure text closeness. Performed Exploratory Data Analysis to find top genres and release trends, creating stunning visual plots using Matplotlib and Seaborn.',
+        challenge: 'Recommending relevant titles without relying on sparse user rating histories.',
+        solution: 'Engineered a text processing pipeline concatenating genres, cast metadata, and plot synopses, computing pairwise Cosine Similarity vectors to output top-ranked title matches.',
+        highlights: ['8,000+ Movies & Shows Vectorized', 'Instant Top-10 Recommendations', 'Release Trend EDA Plots']
+      },
+      iris: {
+        title: 'Iris Flower Classification',
+        badge: 'Supervised Machine Learning Model',
+        tools: 'Python, Scikit-Learn, Logistic Regression, Evaluation',
+        summary: 'Built a machine learning classification model to predict flower species based on physical feature. Utilized Scikit-Learn to train the model and split the dataset into training and testing. Achieved high model accuracy using a standard Logistic Regression algorithm.',
+        challenge: 'Delineating decision boundaries between closely overlapping botanical sub-species based on sepal and petal ratios.',
+        solution: 'Normalized morphological feature values, partitioned data into stratified train/test segments, and fitted a multi-class Logistic Regression model with performance metric validation.',
+        highlights: ['High Model Classification Accuracy', 'Stratified Train-Test Partitioning', 'Scikit-Learn Implementation']
+      }
+    };
+
+    function openProjectModal(id) {
+      const p = projectData[id];
+      if (!p) return;
+
+      const container = document.getElementById('modalContent');
+      container.innerHTML = `
+        <div class="space-y-5">
+          <span class="text-xs font-mono font-semibold text-cyanAccent px-2.5 py-1 rounded bg-brand-950/70 border border-brand-800/80">${p.badge}</span>
+          <h3 class="text-2xl font-bold text-white">${p.title}</h3>
+          
+          <div class="text-xs font-mono text-slate-400">
+            <strong>Tech Stack:</strong> ${p.tools}
+          </div>
+
+          <p class="text-sm text-slate-300 leading-relaxed">${p.summary}</p>
+
+          <div class="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-3 text-xs">
+            <div>
+              <span class="font-bold text-white uppercase font-mono tracking-wider block mb-1">Challenge & Data State:</span>
+              <p class="text-slate-300">${p.challenge}</p>
+            </div>
+            <div>
+              <span class="font-bold text-white uppercase font-mono tracking-wider block mb-1">Analytical Approach:</span>
+              <p class="text-slate-300">${p.solution}</p>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <span class="text-xs font-bold text-white uppercase font-mono">Key Project Outcomes:</span>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              ${p.highlights.map(h => `
+                <div class="p-2.5 rounded-xl bg-brand-950/60 text-cyanAccent text-xs font-medium text-center border border-brand-800/60 font-mono">
+                  ${h}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+            <a href="https://github.com/insha-gif" target="_blank" rel="noopener" class="text-xs font-semibold text-cyanAccent hover:underline flex items-center gap-1.5">
+              <i class="fa-brands fa-github text-sm"></i> Inspect GitHub Repositories
+            </a>
+            <button onclick="closeProjectModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors">
+              Close
+            </button>
+          </div>
+        </div>
+      `;
+
+      const modal = document.getElementById('projectModal');
+      modal.classList.remove('pointer-events-none', 'opacity-0');
+      modal.classList.add('opacity-100');
+    }
+
+    function closeProjectModal() {
+      const modal = document.getElementById('projectModal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function openResumeModal() {
+      const modal = document.getElementById('resumeModal');
+      modal.classList.remove('pointer-events-none', 'opacity-0');
+      modal.classList.add('opacity-100');
+    }
+
+    function closeResumeModal() {
+      const modal = document.getElementById('resumeModal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    /* ==========================================================================
+       4. LIVE INTERACTIVE ANALYTICS LAB (CHART.JS)
+       ========================================================================== */
+    let liveChart = null;
+    let chartType = 'bar';
+    let currentDataset = 'election';
+
+    const datasets = {
+      election: {
+        title: 'Candidate Demographics vs Party Seat Share',
+        subtitle: 'Distribution of Candidate Win Ratios by Party Affiliation (Simulated)',
+        labels: ['National Coalition A', 'Regional Front B', 'Progressive Alliance C', 'Independent Bloc', 'State Coalition D'],
+        label: 'Win Ratio (%)',
+        data: [44, 28, 16, 7, 5],
+        colors: ['#6366f1', '#38bdf8', '#10b981', '#f59e0b', '#ec4899'],
+        pipeline: '<i class="fa-solid fa-circle text-[8px] text-emerald-400 mr-1.5"></i>Pipeline: Pandas Normalized Currency & Affidavits',
+        inferences: [
+          '<strong>Demographic Spread:</strong> Candidates under 45 registered higher vote-efficiency ratios in high-density urban constituencies.',
+          '<strong>Data Wrangling:</strong> 100% of multiline currency records (Crores vs. Lakhs) were harmonized using Python regex.',
+          '<strong>Affidavit Verification:</strong> Transparency in disclosures correlated directly with constituent win margins.'
+        ]
+      },
+      ecommerce: {
+        title: 'E-Commerce Product Category Performance',
+        subtitle: 'Net Revenue Distribution Across Main Retail Departments ($k)',
+        labels: ['Electronics', 'Fashion & Apparel', 'Home & Living', 'Beauty & Personal', 'Sports Gear'],
+        label: 'Revenue ($k)',
+        data: [82, 54, 38, 29, 21],
+        colors: ['#38bdf8', '#6366f1', '#10b981', '#f43f5e', '#a855f7'],
+        pipeline: '<i class="fa-solid fa-circle text-[8px] text-cyan-400 mr-1.5"></i>Pipeline: Missing Value Resolution via Pandas',
+        inferences: [
+          '<strong>Top Category Driver:</strong> Electronics and Fashion comprised 64% of gross sales volume.',
+          '<strong>Seasonal Purchasing:</strong> Q4 holiday quarters saw Home & Living revenue surge by 31%.',
+          '<strong>Clean Inventory:</strong> Imputed missing user IDs enabled accurate repeat buyer cohort identification.'
+        ]
+      }
+    };
+
+    function initChart() {
+      const ctx = document.getElementById('livePortfolioChart').getContext('2d');
+      const d = datasets[currentDataset];
+
+      liveChart = new Chart(ctx, {
+        type: chartType,
+        data: {
+          labels: d.labels,
+          datasets: [{
+            label: d.label,
+            data: d.data,
+            backgroundColor: d.colors,
+            borderRadius: chartType === 'bar' ? 8 : 0,
+            borderWidth: 0,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: chartType === 'doughnut',
+              labels: {
+                color: '#94a3b8',
+                font: { family: 'Plus Jakarta Sans', size: 11 }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleFont: { family: 'Plus Jakarta Sans', size: 12 },
+              bodyFont: { family: 'JetBrains Mono', size: 11 },
+              padding: 10,
+              cornerRadius: 8
+            }
+          },
+          scales: chartType === 'doughnut' ? {} : {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 11 } }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 11 } }
+            }
+          }
+        }
+      });
+
+      updateInferenceUI();
+    }
+
+    function switchLiveDataset(key) {
+      currentDataset = key;
+      const d = datasets[key];
+
+      document.getElementById('chartTitle').innerText = d.title;
+      document.getElementById('chartSubtitle').innerText = d.subtitle;
+      document.getElementById('dataStatusIndicator').innerHTML = d.pipeline;
+
+      const btnE = document.getElementById('btnElection');
+      const btnC = document.getElementById('btnEcommerce');
+
+      if (key === 'election') {
+        btnE.className = 'px-4 py-2 rounded-xl text-xs font-semibold bg-brand-600 text-white transition-all shadow-sm';
+        btnC.className = 'px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white transition-all';
+      } else {
+        btnC.className = 'px-4 py-2 rounded-xl text-xs font-semibold bg-brand-600 text-white transition-all shadow-sm';
+        btnE.className = 'px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white transition-all';
+      }
+
+      if (liveChart) liveChart.destroy();
+      initChart();
+    }
+
+    function toggleChartType() {
+      const types = ['bar', 'doughnut', 'line'];
+      const nextIdx = (types.indexOf(chartType) + 1) % types.length;
+      chartType = types[nextIdx];
+
+      if (liveChart) liveChart.destroy();
+      initChart();
+      showToast(`Switched chart style to ${chartType.toUpperCase()}`);
+    }
+
+    function updateInferenceUI() {
+      const d = datasets[currentDataset];
+      const box = document.getElementById('dynamicInferenceText');
+      box.innerHTML = d.inferences.map(item => `
+        <div class="flex items-start gap-2">
+          <i class="fa-solid fa-arrow-trend-up text-cyanAccent mt-0.5 text-xs"></i>
+          <div>${item}</div>
+        </div>
+      `).join('');
+    }
+
+    /* ==========================================================================
+       5. UTILITY & EVENT HELPERS
+       ========================================================================== */
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toastMsg');
+      msg.textContent = message;
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3000);
+    }
+
+    function copyToClipboard(text, message) {
+      const input = document.createElement('textarea');
+      input.value = text;
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.appendChild(input);
+      input.focus();
+      input.select();
+      try {
+        document.execCommand('copy');
+        showToast(message || 'Copied to clipboard!');
+      } catch (err) {
+        showToast('Unable to copy.');
+      }
+      document.body.removeChild(input);
+    }
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('senderName').value.trim();
+      const email = document.getElementById('senderEmail').value.trim();
+      const msg = document.getElementById('senderMessage').value.trim();
+
+      if (!name || !email || !msg) {
+        showToast('Please fill out all required fields.');
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+        document.getElementById('portfolioContactForm').reset();
+        showToast(`Thank you, ${name}! Your message was submitted successfully.`);
+      }, 1200);
+    }
+
+    // Mobile nav toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+    });
+
+    // Close modals on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeProjectModal();
+        closeResumeModal();
+      }
+    });
+
+    window.onload = function() {
+      renderSkills();
+      initChart();
+    };
+  </script>
+</body>
+</html>
